@@ -50,9 +50,9 @@ print(hypePicLink)
 addseptag()
 
 
-webhookLink = input("请输入webhook link(默认https://discordapp.com/api/webhooks/686448285908860930/I3p93IBKwh5Pc6MVaUmW83S3lGo0kA8hr3GuCtAilZJlErhlrtvPUgjs27iro7tr67Pd):")
+webhookLink = input("请输入webhook link(默认xxx):")
 if webhookLink == "":
-	webhookLink = "https://discordapp.com/api/webhooks/686448285908860930/I3p93IBKwh5Pc6MVaUmW83S3lGo0kA8hr3GuCtAilZJlErhlrtvPUgjs27iro7tr67Pd"
+	webhookLink = ""
 print(webhookLink)
 addseptag()
 
