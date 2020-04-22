@@ -1,0 +1,10 @@
+se.sp.resigame.site:29558:lCMeIGv1:5g3lOInO
+pt.ol.resigame.site:17450:KMsr9KO5:E7uEAseC
+gb.ol.resigame.site:26981:KMsr9KO5:E7uEAseC
+es.ol.resigame.site:15869:KMsr9KO5:E7uEAseC
+pl.sp.resigame.site:29018:lCMeIGv1:5g3lOInO
+es.sp.resigame.site:17334:lCMeIGv1:5g3lOInO
+pl.sp.resigame.site:20928:lCMeIGv1:5g3lOInO
+eu.sp.resigame.site:17905:lCMeIGv1:5g3lOInO
+nl.ol.resigame.site:22712:KMsr9KO5:E7uEAseC
+ch.sp.resigame.site:29206:lCMeIGv1:5g3lOInO
