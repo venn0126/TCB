@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding=utf-8 -*-
 # @Time    : 2020/4/21 18:07
 # @Author  : Augus
 
 import requests
 import time
+import numpy as npy
 
 '''
 
@@ -41,8 +42,8 @@ def setupProxyFromUser(fileName):
             if ':' in proxyListRows[i]:
                 temp = proxyListRows[i]
                 proxys = temp.split(':')
-                proxy = {'http': 'http://' + proxys[2] + ':' + proxys[3] + '@' + proxys[0] + ':' + proxys[1],
-                        'https': 'http://' + proxys[2] + ':' + proxys[3] + '@' + proxys[0] + ':' + proxys[1]}
+                proxy = {'http': 'http://' + proxys[2] + ':' + proxys[3] + '@' + proxys[0] + ':' + proxys[1] + '/',
+                        'https': 'http://' + proxys[2] + ':' + proxys[3] + '@' + proxys[0] + ':' + proxys[1] + '/'}
                 proxyList.append(proxy)
     return proxyList
 
@@ -60,50 +61,51 @@ def setupProxyFromIp(fileName):
     return proxyList
 
 
-def testProxy(proxyList,times,averageValue,host):
-
-    needProxyList = []
-    speedList = []
-    for p in proxyList:
-        for i in range(times):
+def testProxy(originProxyList,proxyList,times,averageValue,host):
+    lastProxyList = []
+    for i in range(len(originProxyList)):
+        speedList = []
+        for j in range(times):
            try:
-            r = requests.get(host,timeout=5,proxies=p)
+            r = requests.get(host,timeout=5,proxies=proxyList[i])
             speedList.append(r.elapsed.microseconds/1000)
-            print('{} response time is {}'.format(p,r.elapsed.microseconds))
+            # print('{} response time is {}'.format(p,r.elapsed.microseconds))
            except Exception as e:
-            print(f'网络异常{e}')
+            print(f'请求异常,发生错误>{e}')
             
             time.sleep(1)
 
-            if i == (times - 1):
-                # 计算平均值
-                currentAver = sum(speedList) / times
-                print(currentAver)
                 # 和要求的平均值比较
-                if currentAver <= averageValue and len(speedList) != 0:
-                    needProxyList.append(p)
-                    file = open('needProxy.txt','a')
-                    proxy = str(p['http'].replace('http://',''))
-                    file.write(proxy)
-                    file.write('\n')
-                    file.close()
+
+        if npy.mean(speedList) < averageValue:
+            print('{} speed is {}'.format(originProxyList[i],npy.mean(speedList)))
+            lastProxyList.append(originProxyList[i])
+            file = open('goodProxy.txt','a')
+            file.write(str(originProxyList[i].replace('\'', '')))
+            file.write('\n')
+            file.close()
 
     addsepline()
-    if not needProxyList:
+    if not lastProxyList:
         print('筛选完成,没有符合条件的proxy')
     else:
-        print('筛选完成,请查看当前目录的needProxy.txt文件')
+        print('筛选完成,请查看当前目录的goodProxy.txt文件')
 
 def main():
     proxyList = []
     try:
-        proxyList = setupProxyFromIp('proxy')
-    except :
         proxyList = setupProxyFromUser('proxy')
+    except :
+        proxyList = setupProxyFromIp('proxy')
 
     if not proxyList:
         print('获取proxy失败,请检查')
         return
+    # get origin proxy list
+    with open('proxy.txt','r') as f:
+        originProxyStr = f.read()
+    originProxyList = originProxyStr.split('\n')
+    print(f'Loaded {len(originProxyList)} proxies')
 
     times = input('请输入你想要每个proxy测试的次数(默认3):')
     if times == '':
@@ -120,13 +122,13 @@ def main():
     host = input('请输入你想要测试的目的主机地址(默认www.google.com):')
     if host == '':
         # host = 'https://www.google.com/'
-        host = 'https://kith.com/'
+        host = 'https://www.supremenewyork.com/'
     print(host)
     addsepline()
 
     # proxyList = [{'http' : 'http://24.172.225.122:53281','https' :'http://24.172.225.122:53281'}]
 
     print('筛选开始,请稍后...')
-    testProxy(proxyList,int(times),float(averageValue),host)
+    testProxy(originProxyList,proxyList,int(times),float(averageValue),host)
 
 main()
